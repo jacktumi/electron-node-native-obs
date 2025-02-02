@@ -1,0 +1,7 @@
+{
+    "obs_data_path": "C:\\Data\\SourceCode\\Streamlabs\\assignment\\obs-studio\\build_x64\\rundir\\Release\\data\\libobs",
+    "obs_module_bin_path": "C:\\Data\\SourceCode\\Streamlabs\\assignment\\obs-studio\\build_x64\\rundir\\Release\\obs-plugins\\64bit",
+    "obs_module_data_path": "C:\\Data\\SourceCode\\Streamlabs\\assignment\\obs-studio\\build_x64\\rundir\\Release\\data\\obs-plugins",
+    "twitch_rtmp": "rtmp://live.twitch.tv/app",
+    "twitch_key": "live_sub_5xadsoolxdq9l4segtdrkcv31ojmyivqud9atwgb"
+}
