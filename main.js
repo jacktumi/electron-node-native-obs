@@ -41,7 +41,7 @@ function createWindow() {
     );
 
     console.log(`INFO: obs-studio initialization results: ${initOBS}`);
-    const streamStatus = addon.startStreamig();
+    const streamStatus = addon.startStreaming();
     console.log(`INFO: Streaming start status: ${streamStatus}`);
     // Wait for 30 seconds before stopping the stream
     setTimeout(() => {

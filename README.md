@@ -2,19 +2,21 @@
 
 **Streamlabs Project by Giacomo Tumini**
 
-This is an electron application that will interact with a native module that uses the OBS project (https://github.com/obsproject) for its backend in order to stream to Twitch. 
+This is an electron application with a native module that uses the OBS project (https://github.com/obsproject) for its backend in order to stream to Twitch. 
 
-The main electron application was built by simply following the steps at https://github.com/electron/electron-quick-start
+The main electron application is based on the template at https://github.com/electron/electron-quick-start
 
-The node native module was built based on the information at:
+The node native module was built using the information at:
 - https://nodejs.org/dist/latest/docs/api/addons.html#addons_c_addons
 - https://github.com/nodejs/node-addon-api/blob/master/doc/setup.md
 
 ## Dependencies
 - obs-studio: https://github.com/obsproject/obs-studio
 - Node.js: https://nodejs.org/en
-- node-gyp: `nmp i node-gyp`
-- node-addon-api: `nmp i node-api`
+- electron: https://www.electronjs.org
+- electron-rebuild: https://github.com/electron/rebuild
+- node-gyp: https://github.com/nodejs/node-gyp
+- node-addon-api: https://github.com/nodejs/node-addon-api
 - Microsoft Visual Studio 2022: https://visualstudio.microsoft.com
 
 ## Expected Behavior
@@ -83,4 +85,42 @@ Napi::Object InitModule(Napi::Env env, Napi::Object exports) {
 }
 
 NODE_API_MODULE(NODE_GYP_MODULE_NAME, InitModule)
+```
+
+## Running the application
+
+To retrieve the source code for electron-node-native-obs application and setup the necessary modules to run it, use the following command (requires git):
+
+```bash
+git clone https://github.com/jacktumi/electron-node-native-obs.git
+cd electron-node-native-obs
+nmp install
+npm install electron
+npm install --save-dev @electron/rebuild
+nmp install --save-dev node-gyp
+nmp install node-addon-api
+```
+Once the source code and node modules have been properly installed, build the application using the following command:
+
+```bash
+npm run build
+npm run rebuild
+```
+
+If the build is successful, you can now start/launch the application. To ensure the obs library can be properly initialized at runtime, update the `settings.json` file by using the appropriate paths for the obs modules/data. Also, make sure to update the Twitch streaming key associated to your Twitch account:
+
+```javascript
+{
+    "obs_data_path": "...\\obs-studio\\build_x64\\rundir\\Release\\data\\libobs",
+    "obs_module_bin_path": "...\\obs-studio\\build_x64\\rundir\\Release\\obs-plugins\\64bit",
+    "obs_module_data_path": "...\\obs-studio\\build_x64\\rundir\\Release\\data\\obs-plugins",
+    "twitch_rtmp": "rtmp://live.twitch.tv/app",
+    "twitch_key": "live_sub_..."
+}
+```
+
+Run the application:
+
+```bash
+npm start
 ```

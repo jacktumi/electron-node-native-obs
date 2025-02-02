@@ -101,7 +101,7 @@ Napi::Boolean SetupStream(const Napi::CallbackInfo& info) {
         std::cout << "  Twitch key: " << twitch_key << std::endl;
 
         OBS_App::ObsStreamer& streamer = OBS_App::ObsStreamer::getInstance();
-        streamer.setupStream(twitch_rtmp, twitch_key);
+        streamer.setupStreaming(twitch_rtmp, twitch_key);
 
         std::cout << "INFO: OBS stream successfully setup." << std::endl;
     }
