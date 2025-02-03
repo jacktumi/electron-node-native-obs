@@ -13,10 +13,17 @@ namespace OBS_App {
     }
 
     ObsStreamer::~ObsStreamer() {
-        stopStreaming();
-        cleanup();
-        //  Shutdown OBS
-        obs_shutdown();
+        try
+        {
+            stopStreaming();
+            cleanup();
+            //  Shutdown OBS
+            obs_shutdown();
+        }
+        catch(...)
+        {
+            //  Ignore exceptions
+        }        
     }
 
     ObsStreamer& ObsStreamer::getInstance() {
