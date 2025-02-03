@@ -12,9 +12,6 @@
         },
         "args" : ["."],
         "outputCapture": "std",
-        "env": {
-            "PATH": "${env:PATH};${workspaceFolder}/../obs-studio/build_x64/rundir/Release/obs-plugins/64bit"
-        }
       }
     ]
   }

@@ -77,7 +77,7 @@ Napi::Boolean InitializeStreamer(const Napi::CallbackInfo& info) {
     return Napi::Boolean::New(env, initResult);
 }
 
-Napi::Boolean SetupStream(const Napi::CallbackInfo& info) {
+Napi::Boolean SetupStreaming(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     bool initResult = true;
 
@@ -91,19 +91,19 @@ Napi::Boolean SetupStream(const Napi::CallbackInfo& info) {
             return Napi::Boolean::New(env, false);
         }
     }
-    std::string twitch_rtmp = info[3].As<Napi::String>().Utf8Value();
-    std::string twitch_key = info[4].As<Napi::String>().Utf8Value();
+    std::string twitch_rtmp = info[0].As<Napi::String>().Utf8Value();
+    std::string twitch_key = info[1].As<Napi::String>().Utf8Value();
 
     try
     {
-        std::cout << "INFO: Setting up OBS stream..." << std::endl;
+        std::cout << "INFO: Setting up Twitch stream..." << std::endl;
         std::cout << "  Twitch RTMP: " << twitch_rtmp << std::endl;
         std::cout << "  Twitch key: " << twitch_key << std::endl;
 
         OBS_App::ObsStreamer& streamer = OBS_App::ObsStreamer::getInstance();
         streamer.setupStreaming(twitch_rtmp, twitch_key);
 
-        std::cout << "INFO: OBS stream successfully setup." << std::endl;
+        std::cout << "INFO: Twitch stream successfully setup." << std::endl;
     }
     catch(const std::exception& e)
     {
@@ -125,8 +125,12 @@ Napi::Boolean StartStreaming(const Napi::CallbackInfo& info) {
 
     try
     {
+        std::cout << "INFO: Starting stream..." << std::endl;
+
         OBS_App::ObsStreamer& streamer = OBS_App::ObsStreamer::getInstance();
         streamer.startStreaming();
+        
+        std::cout << "INFO: Stream started." << std::endl;
     }
     catch(const std::exception& e)
     {
@@ -148,8 +152,12 @@ Napi::Boolean StopStreaming(const Napi::CallbackInfo& info) {
 
     try
     {
+        std::cout << "INFO: Stopping stream..." << std::endl;
+
         OBS_App::ObsStreamer& streamer = OBS_App::ObsStreamer::getInstance();
         streamer.stopStreaming();
+
+        std::cout << "INFO: Stream stopped." << std::endl;
     }
     catch(const std::exception& e)
     {
@@ -168,7 +176,7 @@ Napi::Boolean StopStreaming(const Napi::CallbackInfo& info) {
 Napi::Object InitModule(Napi::Env env, Napi::Object exports) {
     exports.Set(Napi::String::New(env, "getVersion"), Napi::Function::New(env, GetVersion));
     exports.Set(Napi::String::New(env, "initStreamer"), Napi::Function::New(env, InitializeStreamer));
-    exports.Set(Napi::String::New(env, "setupStream"), Napi::Function::New(env, SetupStream));
+    exports.Set(Napi::String::New(env, "setupStreaming"), Napi::Function::New(env, SetupStreaming));
     exports.Set(Napi::String::New(env, "startStreaming"), Napi::Function::New(env, StartStreaming));
     exports.Set(Napi::String::New(env, "stopStreaming"), Napi::Function::New(env, StopStreaming));
     return exports;

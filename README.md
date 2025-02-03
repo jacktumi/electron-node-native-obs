@@ -94,11 +94,11 @@ To retrieve the source code for electron-node-native-obs application and setup t
 ```bash
 git clone https://github.com/jacktumi/electron-node-native-obs.git
 cd electron-node-native-obs
-nmp install
+npm install
 npm install electron
 npm install --save-dev @electron/rebuild
-nmp install --save-dev node-gyp
-nmp install node-addon-api
+npm install --save-dev node-gyp
+npm install node-addon-api
 ```
 Once the source code and node modules have been properly installed, build the application using the following command:
 

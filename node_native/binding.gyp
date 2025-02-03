@@ -12,11 +12,16 @@
       ],
       "cflags!": [ "-fno-exceptions" ],
       "cflags!": [ "-fno-rtti" ],
-      "cflags!": ["-fPIC"],
+      "cflags": [ "/EHsc" ],
       "ldflags": [ "/NODEFAULTLIB:libcmt" ],
       "xcode_settings": {
         "GCC_ENABLE_CPP_EXCEPTIONS": "YES",
         "GCC_ENABLE_OBJC_EXCEPTIONS": "YES"
+      },
+      "msvs_settings": {
+        "VCCLCompilerTool": {
+          "ExceptionHandling": "2" # This is the equivalent of /EHsc
+        }
       },
       "libraries": [
           "C:\\Data\\SourceCode\\Streamlabs\\assignment\\obs-studio\\build_x64\\libobs\\Release\\obs.lib"

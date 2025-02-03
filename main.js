@@ -32,15 +32,17 @@ function createWindow() {
         return;
     }
 
-    const initOBS = addon.initStreamer(
+    const initStreamer = addon.initStreamer(
         obsConfig.obs_data_path,
         obsConfig.obs_module_bin_path,
-        obsConfig.obs_module_data_path,
+        obsConfig.obs_module_data_path
+    );
+    console.log(`INFO: obs streamer initialization results: ${initStreamer}`);
+    const initTwitch = addon.setupStreaming(
         obsConfig.twitch_rtmp,
         obsConfig.twitch_key
     );
-
-    console.log(`INFO: obs-studio initialization results: ${initOBS}`);
+    console.log(`INFO: Twitch streaming setup results: ${initTwitch}`);
     const streamStatus = addon.startStreaming();
     console.log(`INFO: Streaming start status: ${streamStatus}`);
     // Wait for 30 seconds before stopping the stream

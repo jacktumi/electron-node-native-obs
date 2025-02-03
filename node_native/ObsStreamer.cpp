@@ -13,6 +13,7 @@ namespace OBS_App {
     }
 
     ObsStreamer::~ObsStreamer() {
+        stopStreaming();
         cleanup();
         //  Shutdown OBS
         obs_shutdown();
@@ -44,8 +45,10 @@ namespace OBS_App {
         loadObsModules(obsModulesBinPath, obsModulesDataPath);
 
 		//  Create audio and video encoders
-		m_audioEncoder = createAudioEncoder("ffmpeg_aac");
-		m_videoEncoder = createVideoEncoder("obs_x264");
+        const std::string AUDIO_ENCODER_ID("ffmpeg_aac");
+        const std::string VIDEO_ENCODER_ID("obs_x264");
+		m_audioEncoder = createAudioEncoder(AUDIO_ENCODER_ID);
+		m_videoEncoder = createVideoEncoder(VIDEO_ENCODER_ID);
 
 		m_initialized = true;
     }
@@ -63,14 +66,6 @@ namespace OBS_App {
 			m_service = createTwichService(server, key);
 			// Create RTMP output
 			m_output = createRTMPOutput(m_audioEncoder, m_videoEncoder, m_service);
-
-            obs_encoder_set_video(m_videoEncoder, obs_get_video());
-            obs_encoder_set_audio(m_audioEncoder, obs_get_audio());
-
-            // Connect the audio/video encoders, and the Twich service to the output stream
-            obs_output_set_video_encoder(m_output, m_videoEncoder);
-            obs_output_set_audio_encoder(m_output, m_audioEncoder, 0);
-            obs_output_set_service(m_output, m_service);
         } catch (...) {
 			cleanupStreaming();
             throw;
@@ -100,12 +95,9 @@ namespace OBS_App {
 
     // TODO: Handle 'stop' signal
 	void ObsStreamer::stopStreaming() {
-		if (!m_initialized) {
-			throw std::runtime_error("OBS not initialized");
-		}
-		if (!m_service || !m_output) {
-			throw std::runtime_error("Streaming not set up");
-		}
+        if (!m_streaming) {
+            return;
+        }
 		obs_output_stop(m_output);
 		m_streaming = false;
 	}
@@ -173,23 +165,17 @@ namespace OBS_App {
 		if (!audioEncoder) {
 			throw std::runtime_error("Failed to create audio encoder");
 		}
+        obs_encoder_set_audio(audioEncoder, obs_get_audio());
         return audioEncoder;
 	}
 
     obs_encoder_t* ObsStreamer::createVideoEncoder(const std::string& id) {
 		//  Create a video encoder
-        //obs_data_t* videoEncoderSettings = obs_data_create();
-        //obs_data_set_bool(videoEncoderSettings, "use_bufsize", true);
-        //obs_data_set_string(videoEncoderSettings, "profile", "high");
-        //obs_data_set_string(videoEncoderSettings, "preset", "veryfast");
-        //obs_data_set_string(videoEncoderSettings, "rate_control", "CRF");
-        //obs_data_set_int(videoEncoderSettings, "crf", 20);
-        //obs_encoder_t* videoEncoder = obs_video_encoder_create(id.c_str(), "video_encoder", videoEncoderSettings, nullptr);
-        //obs_data_release(videoEncoderSettings);
         obs_encoder_t* videoEncoder = obs_video_encoder_create(id.c_str(), "video_encoder", nullptr, nullptr);
         if (!videoEncoder) {
 			throw std::runtime_error("Failed to create video encoder");
 		}
+        obs_encoder_set_video(videoEncoder, obs_get_video());
 		return videoEncoder;
 	}
 
@@ -212,6 +198,11 @@ namespace OBS_App {
         if (!output) {
             throw std::runtime_error("Failed to create output");
         }
+        // Connect the audio/video encoders, and the Twich service to the output stream
+        obs_output_set_video_encoder(output, videoEncoder);
+        obs_output_set_audio_encoder(output, audioEncoder, 0);
+        obs_output_set_service(output, service);
+        return output;
     }
 
     void ObsStreamer::cleanupStreaming() {
