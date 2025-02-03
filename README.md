@@ -100,7 +100,21 @@ npm install --save-dev @electron/rebuild
 npm install --save-dev node-gyp
 npm install node-addon-api
 ```
-Once the source code and node modules have been properly installed, build the application using the following command:
+Once the source code and node modules have been properly installed, update the `node_native\binding.gyp` file to properly specify the obs-studio paths for `include_dirs` and `libraries`:
+
+```gyp
+"include_dirs": [
+"<!(node -p \"require('node-addon-api').include_dir\")",
+"...\\obs-studio\\libobs"
+],
+```
+```gyp
+"libraries": [
+    "...\\obs-studio\\build_x64\\libobs\\Release\\obs.lib"
+]
+```
+
+Build the application using the following command:
 
 ```bash
 npm run build
